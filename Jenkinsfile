@@ -7,7 +7,18 @@ node{
 
     stage('Linting'){
         sh 'pwd'
-        sh'echo start Linting' 
+        def lintContainer = docker.image('python:3.7.3-stretch')
+        lintContainer.pull()
+        lintContainer.inside{
+            sh """
+                python3 -m venv venv
+                . venv/bin/activate
+                make install
+                wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 && \
+                chmod +x /bin/hadolint
+                make lint
+            """            
+        }
     }
 
     stage('Build blue image') {
