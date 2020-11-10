@@ -1,33 +1,33 @@
-pipeline{
-    agent any
+node{
+    stage('Preparation'){
+        checkout scm
+        sh 'git rev-parse --short HEAD'
+        sh 'pwd' 
+    }
+
     stage(‘Linting'){
-        steps{
-            sh'echo start Linting' 
-        }
+        sh 'pwd'
+        sh'echo start Linting' 
     }
+
     stage('Build blue image') {
-        steps{
-            sh'echo start Build' 
-        }
+        sh 'pwd'
+        sh'echo start Build' 
     }
+
     stage('Push blue image') {
-        steps{
-            sh'echo start Push' 
-        }
+        sh'echo start Push' 
     }
+
     stage('create the kubeconfig file') {
-        steps{
-            sh'create the kubeconfig file' 
-        }
+        sh'create the kubeconfig file' 
     }
+
     stage('Deploy blue container') {
-        steps{
-            sh'Deploy blue container' 
-        }
+        sh'Deploy blue container' 
     }
+
     stage('Redirect service to blue container') {
-        steps{
-            sh'Redirect service to blue container' 
-        }
+        sh'Redirect service to blue container' 
     }    
 }
