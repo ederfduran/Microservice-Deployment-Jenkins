@@ -20,14 +20,14 @@ node{
     }
 
     stage('create the kubeconfig file') {
-        sh'create the kubeconfig file' 
+        sh'echo create the kubeconfig file' 
     }
 
     stage('Deploy blue container') {
-        sh'Deploy blue container' 
+        sh'echo Deploy blue container' 
     }
 
     stage('Redirect service to blue container') {
-        sh'Redirect service to blue container' 
+        sh'echo Redirect service to blue container' 
     }    
 }
