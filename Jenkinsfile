@@ -5,7 +5,7 @@ node{
         sh 'pwd' 
     }
 
-    stage(‘Linting'){
+    stage('Linting'){
         sh 'pwd'
         sh'echo start Linting' 
     }
