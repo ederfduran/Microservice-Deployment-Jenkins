@@ -1,4 +1,9 @@
 node{
+    registry = "ederd/flaskapp"
+    tag = "v0.0.2"
+    registryCredential = 'dockerhub'
+    dockerImage = ""
+
     stage('Preparation'){
         checkout scm
         sh 'git rev-parse --short HEAD'
@@ -22,12 +27,15 @@ node{
     }
 
     stage('Build blue image') {
-        sh 'pwd'
-        sh'echo start Build' 
+        dockerImage = docker.build(registry+tag)
+        sh "docker image ls"
+        
     }
 
     stage('Push blue image') {
-        sh'echo start Push' 
+        docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+        }
     }
 
     stage('create the kubeconfig file') {
