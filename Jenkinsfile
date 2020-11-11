@@ -1,6 +1,6 @@
 node{
     registry = "ederd/flaskapp"
-    tag = "v0.0.2"
+    version_tag = "v0.0.2"
     registryCredential = 'dockerhub'
     dockerImage = ""
 
@@ -27,14 +27,14 @@ node{
     }
 
     stage('Build blue image') {
-        dockerImage = docker.build(registry+tag)
+        dockerImage = docker.build(registry)
         sh "docker image ls"
         
     }
 
     stage('Push blue image') {
         docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
+            dockerImage.push(version_tag)
         }
     }
 
