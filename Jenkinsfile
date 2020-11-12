@@ -1,6 +1,8 @@
 node{
+    deploymentColor = ""
+    deploymentFile = ""
     registry = "ederd/flaskapp"
-    versionTag = "v0.0.2"
+    versionTag = "v0.0.1"
     registryCredential = 'dockerhub'
     dockerImage = ""
     clusterName = "capstoneProject"
@@ -9,6 +11,17 @@ node{
         checkout scm
         sh 'git rev-parse --short HEAD'
         sh 'pwd' 
+    }
+
+    stage('Initialization'){
+        if (env.BRANCH_NAME == "main"){
+            deploymentColor = "Green"
+            deploymentFile = "service-green-deployment.yml"
+        } else{
+            deploymentColor = "Blue"
+            deploymentFile = "service-blue-deployment.yml"
+        }
+        echo "Deployment Color ${deploymentColor}"
     }
 
     stage('Linting'){
@@ -27,13 +40,13 @@ node{
         }
     }
 
-    stage('Build blue image') {
-        dockerImage = docker.build(registry)
+    stage('Build image') {
+        dockerImage = docker.build(registry+deploymentColor)
         sh "docker image ls"
         
     }
 
-    stage('Push blue image') {
+    stage('Push image') {
         docker.withRegistry( '', registryCredential ) {
             dockerImage.push(versionTag)
         }
@@ -70,14 +83,19 @@ node{
     stage('Deploy blue container') {
         withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
         sh """
-            kubectl apply -f service-deployment.yml
+            kubectl apply -f $deploymentFile
             kubectl get pods
             kubectl get services
         """
     } 
     }
 
-    stage('Redirect service to blue container') {
-        sh'echo Redirect service to blue container' 
+    stage('Redirect service to green container') {
+        if (deploymentColor == "Green"){
+        sh """
+            echo 'Redirect service to blue container'
+            kubectl apply -f blue-green-service.yml
+        """
+        }
     }    
 }
