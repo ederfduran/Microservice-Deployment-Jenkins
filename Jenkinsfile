@@ -1,8 +1,9 @@
 node{
     registry = "ederd/flaskapp"
-    version_tag = "v0.0.2"
+    versionTag = "v0.0.2"
     registryCredential = 'dockerhub'
     dockerImage = ""
+    clusterName = "capstoneProject"
 
     stage('Preparation'){
         checkout scm
@@ -34,16 +35,46 @@ node{
 
     stage('Push blue image') {
         docker.withRegistry( '', registryCredential ) {
-            dockerImage.push(version_tag)
+            dockerImage.push(versionTag)
         }
     }
 
+    stage('Verify/Create Cluster'){
+        withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
+        def resp = sh(returnStdout: true, script: "aws eks list-clusters").trim()
+        def j = readJSON text: resp
+        def clusterFound = false
+        for (cluster in j['clusters']){
+            if (cluster == clusterName){
+                sh "echo 'Cluster already exists!'"
+                clusterFound = true
+            }
+        }
+        if (!clusterFound){
+            sh "echo 'Start cluster deployment'"
+            sh "eksctl create cluster --name $clusterName --node-type t2.micro --nodes 2 --nodes-min 1 --nodes-max 3 --managed"
+        }
+    }
+        
+
+    }
+
     stage('create the kubeconfig file') {
-        sh'echo create the kubeconfig file' 
+        withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
+        sh """
+            aws eks --region us-west-1 update-kubeconfig --name $clusterName
+        """
+    } 
     }
 
     stage('Deploy blue container') {
-        sh'echo Deploy blue container' 
+        withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
+        sh """
+            kubectl apply -f service-deployment.yml
+            kubectl get pods
+            kubectl get services
+        """
+    } 
     }
 
     stage('Redirect service to blue container') {
