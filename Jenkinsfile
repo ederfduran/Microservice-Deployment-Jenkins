@@ -97,5 +97,16 @@ node{
             kubectl apply -f blue-green-service.yml
         """
         }
-    }    
+    }
+
+    stage('smoke test'){
+        withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
+        def resp = sh(returnStdout: true, script: "kubectl get svc flaskapp-service -o json").trim()
+        def j = readJSON text: resp
+        sh "echo ${j}"
+        HOST = j['status']['loadBalancer']['ingress'][0]['hostname']
+        PORT = 80
+        ./make_prediction.sh
+    } 
+    }   
 }
