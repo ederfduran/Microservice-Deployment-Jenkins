@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-echo "Host: $HOST"
-echo "Port: $PORT"
+echo "Host: ${HOST}"
+echo "Port: ${PORT}"
 
 # POST method predict
 curl -d '{  
