@@ -13,7 +13,7 @@ COPY . app.py /app/
 # hadolint ignore=DL3013
 RUN pip install --upgrade pip && \
     pip install --trusted-host pypi.python.org -r requirements.txt
-
+echo "intentional mistake"
 ## Step 4:
 # Expose port 8000
 EXPOSE 8000
