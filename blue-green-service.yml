@@ -4,7 +4,7 @@ metadata:
   name: flaskapp-service
 spec:
   selector:
-    app: flaskappGreen
+    app: flaskapp-green
   type: LoadBalancer
   ports:
     - protocol: TCP

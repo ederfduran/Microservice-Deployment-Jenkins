@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flaskappGreen
+  name: flaskapp-green
   labels:
-    app: flaskappGreen
+    app: flaskapp-green
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flaskappGreen
+      app: flaskapp-green
   template:
     metadata:
       labels:
-        app: flaskappGreen
+        app: flaskapp-green
     spec:
       containers:
-        - name: flaskappGreen
+        - name: flaskapp-green
           image: ederd/flaskappgreen:v0.0.1
           imagePullPolicy: "Always"
           ports:

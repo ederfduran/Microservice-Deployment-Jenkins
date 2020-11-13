@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flaskappBlue
+  name: flaskapp-blue
   labels:
-    app: flaskappBlue
+    app: flaskapp-blue
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flaskappBlue
+      app: flaskapp-blue
   template:
     metadata:
       labels:
-        app: flaskappBlue
+        app: flaskapp-blue
     spec:
       containers:
-        - name: flaskappBlue
+        - name: flaskapp-blue
           image: ederd/flaskappblue:v0.0.1
           imagePullPolicy: "Always"
           ports:
@@ -27,7 +27,7 @@ metadata:
   name: flaskapp-service
 spec:
   selector:
-    app: flaskappBlue
+    app: flaskapp-blue
   type: LoadBalancer
   ports:
     - protocol: TCP
