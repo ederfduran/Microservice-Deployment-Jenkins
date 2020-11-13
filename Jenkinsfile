@@ -98,38 +98,4 @@ node{
         """
         }
     }
-
-    stage('smoke test'){
-        withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
-        def resp = sh(returnStdout: true, script: "kubectl get svc flaskapp-service -o json").trim()
-        def j = readJSON text: resp
-        sh "echo ${j}"
-        HOST = j['status']['loadBalancer']['ingress'][0]['hostname']
-        PORT = 8000
-        sh """
-            curl -d '{  
-            "CHAS":{  
-                "0":0
-            },
-            "RM":{  
-                "0":6.575
-            },
-            "TAX":{  
-                "0":296.0
-            },
-            "PTRATIO":{  
-                "0":15.3
-            },
-            "B":{  
-                "0":396.9
-            },
-            "LSTAT":{  
-                "0":4.98
-            }
-            }'\
-                -H "Content-Type: application/json" \
-                -X POST http://$HOST:$PORT/predict
-        """
-    } 
-    }   
 }
