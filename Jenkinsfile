@@ -80,7 +80,7 @@ node{
     } 
     }
 
-    stage('Deploy blue container') {
+    stage('Deploy container') {
         withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
         sh """
             kubectl apply -f $deploymentFile
@@ -92,10 +92,13 @@ node{
 
     stage('Redirect service to green container') {
         if (deploymentColor == "green"){
-        sh """
-            echo 'Redirect service to blue container'
-            kubectl apply -f blue-green-service.yml
-        """
+        
+            withAWS(region:'us-west-1', credentials:'demo-ecr-credentials') {
+            sh """
+                echo 'Redirect service to blue container'
+                kubectl apply -f blue-green-service.yml
+            """
+            }
         }
     }
 }
