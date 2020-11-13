@@ -105,7 +105,7 @@ node{
         def j = readJSON text: resp
         sh "echo ${j}"
         HOST = j['status']['loadBalancer']['ingress'][0]['hostname']
-        PORT = 80
+        PORT = 8000
         ./make_prediction.sh
     } 
     }   
