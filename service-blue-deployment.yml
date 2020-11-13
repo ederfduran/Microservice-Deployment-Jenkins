@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flaskappBlue
-          image: ederd/flaskappBlue:v0.0.1
+          image: ederd/flaskappblue:v0.0.1
           imagePullPolicy: "Always"
           ports:
             - containerPort: 80
